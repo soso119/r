@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #782c2c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .container h2 {
+            text-align: center;
+        }
+
+        .container label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .container input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .container input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>تسجيل الدخول</h2>
+        <form action="process_login.php" method="post">
+            <label for="full_name">الاسم الكامل:</label>
+            <input type="text" id="full_name" name="full_name" required>
+
+            <label for="phone_number">رقم الهاتف:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+
+            <input type="submit" value="تسجيل الدخول">
+        </form>
+    </div>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const fullNameInput = document.getElementById('full_name');
+        const phoneNumberInput = document.getElementById('phone_number');
+        const fullNameError = document.getElementById('full_name_error');
+        const phoneNumberError = document.getElementById('phone_number_error');
+
+
+        loginForm.addEventListener('submit', (event) => {
+            let hasErrors = false;
+            fullNameError.textContent = '';
+            phoneNumberError.textContent = '';
+
+
+            if (fullNameInput.value.trim() === '') {
+                fullNameError.textContent = 'الاسم الكامل مطلوب.';
+                hasErrors = true;
+            }
+
+            if (phoneNumberInput.value.trim() === '') {
+                phoneNumberError.textContent = 'رقم الهاتف مطلوب.';
+                hasErrors = true;
+            } else if (!/^[0-9]{10}$/.test(phoneNumberInput.value.trim())) {
+                phoneNumberError.textContent = 'رقم الهاتف يجب أن يحتوي على 10 أرقام.';
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                event.preventDefault();
+            }else{
+                // If there are no errors, you can submit the form data to the server using AJAX or fetch
+                // Example using fetch:
+                const formData = new FormData(loginForm);
+                fetch('process_login.php', {  // Replace 'process_login.php' with your server-side script
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Show server response
+                    loginForm.reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
